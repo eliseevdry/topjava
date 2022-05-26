@@ -42,17 +42,32 @@ public class UserMealsUtil {
             } else days.put(date, cal);
         }
         //сначала сделал в 3 цикла, потом решил объединить в 2, так как метод не перегружен и в него не получится зайти, не указав промежуток времени
+//        for (UserMeal meal : meals) {
+//            if (days.get(LocalDate.from(meal.getDateTime())) > caloriesPerDay
+//                    && LocalTime.from(meal.getDateTime()).isAfter(startTime)
+//                    && LocalTime.from(meal.getDateTime()).isBefore(endTime)) {
+//                result.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), true));
+//            } else if (LocalTime.from(meal.getDateTime()).isAfter(startTime)
+//                    && LocalTime.from(meal.getDateTime()).isBefore(endTime))
+//                result.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), false));
+//        }
         for (UserMeal meal : meals) {
-            if (days.get(LocalDate.from(meal.getDateTime())) > caloriesPerDay && LocalTime.from(meal.getDateTime()).isAfter(startTime) && LocalTime.from(meal.getDateTime()).isBefore(endTime)) {
+            if (days.get(LocalDate.from(meal.getDateTime())) > caloriesPerDay
+                    && TimeUtil.isBetweenHalfOpen(LocalTime.from(meal.getDateTime()), startTime, endTime)) {
                 result.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), true));
-            } else if (LocalTime.from(meal.getDateTime()).isAfter(startTime) && LocalTime.from(meal.getDateTime()).isBefore(endTime))
+            } else if (TimeUtil.isBetweenHalfOpen(LocalTime.from(meal.getDateTime()), startTime, endTime))
                 result.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), false));
         }
         return result;
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO Implement by streams
+//        List<UserMealWithExcess> result = meals.stream().
+
+
+
+
+
         return null;
     }
 }
