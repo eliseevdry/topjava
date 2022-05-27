@@ -36,7 +36,6 @@ public class UserMealsUtil {
             int calories = meal.getCalories();
             countCaloriesPerDays.merge(dateOfMeal, calories, Integer::sum);
         }
-
         List<UserMealWithExcess> result = new ArrayList<>();
         for (UserMeal meal : meals) {
             boolean isBetween = TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime);
