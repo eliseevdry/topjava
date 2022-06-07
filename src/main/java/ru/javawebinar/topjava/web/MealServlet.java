@@ -22,7 +22,7 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private List<Meal> meals;
-    private final int caloriesPerDay = 2000;
+    private static final int CALORIES_PER_DAY = 2000;
 
     @Override
     public void init() throws ServletException {
@@ -40,7 +40,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), caloriesPerDay);
+        List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.of(0, 0), LocalTime.of(23, 59, 59, 9999), CALORIES_PER_DAY);
         request.setAttribute("mealsTo", mealsTo);
         log.debug("forward to meals");
         request.getRequestDispatcher("meals.jsp").forward(request, response);
@@ -50,7 +50,7 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF8");
 
-        if(!requestIsValid(request)) {
+        if (!requestIsValid(request)) {
             doGet(request, response);
         }
 
