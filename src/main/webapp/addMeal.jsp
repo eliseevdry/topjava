@@ -9,9 +9,10 @@
 <hr>
 <h2>Add Meals</h2>
 <form method="post" action="meals">
-    <label><input type="datetime-local" name="date"></label>DateTime<br>
-    <label><input type="text" name="description"></label>Description<br>
-    <label><input type="number" name="calories"></label>Calories<br>
+    <input type="hidden" name="id" value="${id}">
+    <label><input type="datetime-local" name="date" value="${dateTime}"></label>DateTime<br>
+    <label><input type="text" name="description" value="${description}"></label>Description<br>
+    <label><input type="number" name="calories" value="${calories}"></label>Calories<br>
     <input type="submit" value="Save" name="Save"><br>
     <input type="reset" value="Cancel" name="Cancel"><br>
 </form>
