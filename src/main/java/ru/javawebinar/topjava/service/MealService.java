@@ -19,7 +19,7 @@ public class MealService {
         this.repository = repository;
     }
     public Meal create(int userId, Meal meal) {
-        return repository.save(userId, meal);
+        return repository.save(userId, meal, meal.getId());
     }
 
     public void delete(int userId, int id) {
@@ -38,8 +38,8 @@ public class MealService {
         return repository.getAllByUser(userId);
     }
 
-    public void update(int userId, Meal meal) {
-        checkNotFoundWithId(repository.save(userId, meal), meal.getId());
+    public void update(int userId, Meal meal, Integer id) {
+        checkNotFoundWithId(repository.save(userId, meal, id), meal.getId());
     }
 
     public List<Meal> getAllWithFilter(int userId, LocalDateTime start, LocalDateTime end) {

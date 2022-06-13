@@ -23,9 +23,11 @@ public class MealRestController {
         service.delete(authUserId(), id);
     }
 
-    public void update(Meal meal) {
-        service.update(authUserId(), meal);
+    public void update(Meal meal, Integer id) {
+        service.update(authUserId(), meal, id);
     }
+
+    public List<Meal> getAll() { return service.getAll(); }
 
     public List<Meal> getAllByUser() {
         return service.getAllByUser(authUserId());

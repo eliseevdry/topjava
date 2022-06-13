@@ -15,23 +15,26 @@ import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
-    private final Map<Integer, Meal> repository = new HashMap<>();
+    private final Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(m->save(m.getUserId(), m));
+        MealsUtil.meals.forEach(m -> save(m.getUserId(), m, 1));
     }
 
     @Override
-    //TODO реализация сохранения/обновления не учитывает userId, не пойму как учесть
-    public Meal save(int userId, Meal meal) {
+    public Meal save(int userId, Meal meal, Integer id) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
             return meal;
+        } else {
+            if (repository.get(meal.getId()).getUserId() == userId) {
+                return repository.computeIfPresent(meal.getId(), (i, oldMeal) -> meal);
+            }
         }
         // handle case: update, but not present in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        throw new NotFoundException("This meal not yours!");
     }
 
     @Override
@@ -53,7 +56,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll() {
-        List <Meal> mealList = new ArrayList<>(repository.values());
+        List<Meal> mealList = new ArrayList<>(repository.values());
         mealList.sort(Comparator.comparing(Meal::getDate));
         if (mealList.isEmpty()) {
             throw new NotFoundException("Repository is empty!");
@@ -62,18 +65,12 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    //TODO stream, один метод на всех, если userId=0, то выдать всю еду, атомарная реализация
     public List<Meal> getAllByUser(int userId) {
-        List<Meal> mealList = new ArrayList<>();
-        for (Meal meal : repository.values()) {
-            if (meal.getUserId() == userId) {
-                mealList.add(meal);
-            }
-        }
+        List<Meal> mealList = repository.values().stream().filter(meal -> meal.getUserId() == userId)
+                .sorted(Comparator.comparing(Meal::getDate)).collect(Collectors.toList());
         if (mealList.isEmpty()) {
             throw new NotFoundException("Repository is empty!");
         }
-        mealList.sort(Comparator.comparing(Meal::getDate));
         return mealList;
     }
 
