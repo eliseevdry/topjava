@@ -1,16 +1,17 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Repository
 public class InMemoryMealRepository implements MealRepository {
-    private final Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private final Map<Integer, Meal> repository = new HashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -29,18 +30,38 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public boolean delete(int id) {
-        return repository.remove(id) != null;
+    public boolean delete(int userId, int id) {
+        if (get(userId, id) != null) {
+            return repository.remove(id) != null;
+        }
+        return false;
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int userId, int id) {
+        Meal meal = repository.get(id);
+        if (meal.getUserId() == userId) {
+            return meal;
+        }
+        return null;
     }
 
     @Override
-    public Collection<Meal> getAll() {
-        return repository.values();
+    public List<Meal> getAll() {
+        return new ArrayList<>(repository.values());
+    }
+
+    @Override
+    //TODO stream, один метод на всех, если userId=0, то выдать всю еду, атомарная реализация
+    public List<Meal> getAllByUser(int userId) {
+        List<Meal> mealList = new ArrayList<>();
+        for (Meal meal : repository.values()) {
+            if (meal.getUserId() == userId) {
+                mealList.add(meal);
+            }
+        }
+        mealList.sort(Comparator.comparing(Meal::getDate));
+        return mealList;
     }
 }
 
