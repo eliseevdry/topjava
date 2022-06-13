@@ -60,6 +60,6 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return getAll().stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst().orElseThrow(()->new NotFoundException("Not found"));
+        return repository.values().stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst().orElseThrow(()->new NotFoundException("User not found"));
     }
 }
