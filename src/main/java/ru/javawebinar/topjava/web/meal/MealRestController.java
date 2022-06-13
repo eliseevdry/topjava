@@ -27,10 +27,9 @@ public class MealRestController {
         service.update(authUserId(), meal, id);
     }
 
-    public List<Meal> getAll() { return service.getAll(); }
 
-    public List<Meal> getAllByUser() {
-        return service.getAllByUser(authUserId());
+    public List<Meal> getAll() {
+        return service.getAll(authUserId());
     }
 
     public List<Meal> getAllWithFilter(LocalDateTime start, LocalDateTime end) {

@@ -8,7 +8,9 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -54,18 +56,9 @@ public class InMemoryMealRepository implements MealRepository {
         return null;
     }
 
-    @Override
-    public List<Meal> getAll() {
-        List<Meal> mealList = new ArrayList<>(repository.values());
-        mealList.sort(Comparator.comparing(Meal::getDate));
-        if (mealList.isEmpty()) {
-            throw new NotFoundException("Repository is empty!");
-        }
-        return mealList;
-    }
 
     @Override
-    public List<Meal> getAllByUser(int userId) {
+    public List<Meal> getAll(int userId) {
         List<Meal> mealList = repository.values().stream().filter(meal -> meal.getUserId() == userId)
                 .sorted(Comparator.comparing(Meal::getDate)).collect(Collectors.toList());
         if (mealList.isEmpty()) {
@@ -76,7 +69,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAllWithFilter(int userId, LocalDateTime start, LocalDateTime end) {
-        return getAllByUser(userId).stream().filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(),
+        return getAll(userId).stream().filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(),
                 start.toLocalTime(), end.toLocalTime())).collect(Collectors.toList());
     }
 }
