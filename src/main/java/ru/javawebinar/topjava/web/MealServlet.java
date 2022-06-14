@@ -35,31 +35,23 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action");
-        switch (action == null ? "all" : action) {
-            case "filter":
-                response.sendRedirect("meals");
-                break;
-            case "all":
-            default:
-                String id = request.getParameter("id");
-                String userId = request.getParameter("userId");
 
-                Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                        LocalDateTime.parse(request.getParameter("dateTime")),
-                        request.getParameter("description"),
-                        Integer.parseInt(request.getParameter("calories")),
-                        userId.isEmpty() ? null : Integer.valueOf(userId));
+        String id = request.getParameter("id");
+        String userId = request.getParameter("userId");
 
-                log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-                if (meal.isNew()) {
-                    controller.create(meal);
-                } else {
-                    controller.update(meal, meal.getId());
-                }
-                response.sendRedirect("meals");
-                break;
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")),
+                userId.isEmpty() ? null : Integer.valueOf(userId));
+
+        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+        if (meal.isNew()) {
+            controller.create(meal);
+        } else {
+            controller.update(meal, meal.getId());
         }
+        response.sendRedirect("meals");
     }
 
     @Override
