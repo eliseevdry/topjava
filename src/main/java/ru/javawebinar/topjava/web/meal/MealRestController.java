@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -53,6 +54,10 @@ public class MealRestController {
     public List<MealTo> getAllWithFilter(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("getAllWithFilter for user {}", authUserId());
         return service.getAllWithFilter(authUserId(), startDate, startTime, endDate, endTime);
+    }
+
+    public void setAuthUserId(int authUserId) {
+        SecurityUtil.setAuthUserId(authUserId);
     }
 
 }
