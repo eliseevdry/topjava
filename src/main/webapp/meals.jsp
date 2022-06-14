@@ -21,6 +21,7 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
@@ -49,6 +50,21 @@
             </tr>
         </c:forEach>
     </table>
+    <h2>Filter parameters</h2>
+    <form method="get" action="meals?action=filter">
+        <dl>
+            <dt>Start date and time:</dt>
+            <dd><input type="date" name="startDate" required></dd>
+            <dd><input type="time" name="startTime" required></dd>
+        </dl>
+        <dl>
+            <dt>End date and time:</dt>
+            <dd><input type="date" name="endDate" required></dd>
+            <dd><input type="time" name="endTime" required></dd>
+        </dl>
+        <button type="submit">Filter</button>
+        <button onclick="window.history.back()" type="button">Cancel</button>
+    </form>
 </section>
 </body>
 </html>

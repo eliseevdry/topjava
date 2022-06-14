@@ -50,7 +50,7 @@ public class MealRestController {
         return service.getAll(authUserId());
     }
 
-    public List<Meal> getAllWithFilter(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<MealTo> getAllWithFilter(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("getAllWithFilter for user {}", authUserId());
         return service.getAllWithFilter(authUserId(), startDate, startTime, endDate, endTime);
     }
