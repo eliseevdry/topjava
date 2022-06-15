@@ -32,6 +32,12 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
+    public void destroy() {
+        springContext.close();
+        super.destroy();
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
@@ -41,8 +47,7 @@ public class MealServlet extends HttpServlet {
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")),
-                userId.isEmpty() ? null : Integer.valueOf(userId));
+                Integer.parseInt(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         if (meal.isNew()) {
@@ -79,15 +84,15 @@ public class MealServlet extends HttpServlet {
             default:
                 log.info("getAllWithFilter");
 
-                String sD = request.getParameter("startDate");
-                String eD = request.getParameter("endDate");
-                String sT = request.getParameter("startTime");
-                String eT = request.getParameter("endTime");
+                String startDate1 = request.getParameter("startDate");
+                String endDate1 = request.getParameter("endDate");
+                String startTime1 = request.getParameter("startTime");
+                String endTime1 = request.getParameter("endTime");
 
-                LocalDate startDate = sD == null ? LocalDate.MIN : LocalDate.parse(sD);
-                LocalDate endDate = eD == null ? LocalDate.MAX : LocalDate.parse(eD);
-                LocalTime startTime = sT == null ? LocalTime.MIN : LocalTime.parse(sT);
-                LocalTime endTime = eT == null ? LocalTime.MAX : LocalTime.parse(eT);
+                LocalDate startDate = startDate1 == null ? LocalDate.MIN : LocalDate.parse(startDate1);
+                LocalDate endDate = endDate1 == null ? LocalDate.MAX : LocalDate.parse(endDate1);
+                LocalTime startTime = startTime1 == null ? LocalTime.MIN : LocalTime.parse(startTime1);
+                LocalTime endTime = endTime1 == null ? LocalTime.MAX : LocalTime.parse(endTime1);
 
                 request.setAttribute("mealsTo", controller.getAllWithFilter(startDate, startTime, endDate, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);

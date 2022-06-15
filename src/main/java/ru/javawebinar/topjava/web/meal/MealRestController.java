@@ -20,39 +20,40 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 @Controller
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private MealService service;
 
     public Meal get(int id) {
-        log.info("get {} meal for user {}", id, authUserId());
+        log.trace("get {} meal for user {}", id, authUserId());
         return service.get(authUserId(), id);
     }
 
     public void delete(int id) {
-        log.info("delete {} meal for user {}", id, authUserId());
+        log.trace("delete {} meal for user {}", id, authUserId());
         service.delete(authUserId(), id);
     }
 
-    public void update(Meal meal, Integer id) {
-        log.info("update {} with id={} for user {}", meal, id, authUserId());
+    public void update(Meal meal, int id) {
+        log.trace("update {} with id={} for user {}", meal, id, authUserId());
         assureIdConsistent(meal, id);
         service.update(authUserId(), meal);
     }
 
     public Meal create(Meal meal) {
-        log.info("create {} meal for user {}", meal, authUserId());
+        log.trace("create {} meal for user {}", meal, authUserId());
         checkNew(meal);
         return service.create(authUserId(), meal);
     }
 
 
     public List<MealTo> getAll() {
-        log.info("getAll for {}", authUserId());
+        log.trace("getAll for {}", authUserId());
         return service.getAll(authUserId(), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public List<MealTo> getAllWithFilter(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        log.info("getAllWithFilter for user {}", authUserId());
+        log.trace("getAllWithFilter for user {}", authUserId());
         return service.getAllWithFilter(authUserId(), startDate, startTime, endDate, endTime, SecurityUtil.authUserCaloriesPerDay());
     }
 }
