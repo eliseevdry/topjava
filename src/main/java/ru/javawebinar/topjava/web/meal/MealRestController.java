@@ -36,7 +36,7 @@ public class MealRestController {
     public void update(Meal meal, Integer id) {
         log.info("update {} with id={} for user {}", meal, id, authUserId());
         assureIdConsistent(meal, id);
-        service.update(authUserId(), meal, id);
+        service.update(authUserId(), meal);
     }
 
     public Meal create(Meal meal) {
@@ -48,16 +48,11 @@ public class MealRestController {
 
     public List<MealTo> getAll() {
         log.info("getAll for {}", authUserId());
-        return service.getAll(authUserId());
+        return service.getAll(authUserId(), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public List<MealTo> getAllWithFilter(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("getAllWithFilter for user {}", authUserId());
-        return service.getAllWithFilter(authUserId(), startDate, startTime, endDate, endTime);
+        return service.getAllWithFilter(authUserId(), startDate, startTime, endDate, endTime, SecurityUtil.authUserCaloriesPerDay());
     }
-
-    public void setAuthUserId(int authUserId) {
-        SecurityUtil.setAuthUserId(authUserId);
-    }
-
 }

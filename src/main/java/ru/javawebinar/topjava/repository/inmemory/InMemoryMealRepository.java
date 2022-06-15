@@ -6,7 +6,9 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -24,34 +26,36 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(m -> save(1, m, null));
+        MealsUtil.meals.forEach(m -> save(2, m));
+        save(1, new Meal(LocalDateTime.of(2020, Month.JANUARY, 12, 12, 0), "ОБЕД АДМИНА", 1000));
+        save(1, new Meal(LocalDateTime.of(2020, Month.JANUARY, 12, 20, 0), "УЖИН АДМИНА", 1000));
     }
 
     @Override
-    public Meal save(int userId, Meal meal, Integer id) {
+    public Meal save(int userId, Meal meal) {
+        Integer id = meal.getId();
+
         if (meal.isNew()) {
-            meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
-            Map<Integer, Meal> subMap = repository.get(userId);
-            if (subMap == null) {
-                subMap = new ConcurrentHashMap<>();
-            }
-            subMap.put(meal.getId(), meal);
-            repository.put(userId, subMap);
-            return meal;
-        } else {
-            return repository.get(userId).put(id, meal);
+            id = counter.incrementAndGet();
+            meal.setId(id);
+        } else if (get(id, userId) == null) {
+            return null;
         }
+        repository.computeIfAbsent(userId, ConcurrentHashMap::new);
+        repository.get(userId).put(id, meal);
+        return meal;
     }
 
     @Override
     public boolean delete(int userId, int id) {
-        return get(userId, id) != null && repository.get(userId).remove(id) != null;
+        Map<Integer, Meal> subMap = repository.get(userId);
+        return subMap != null && subMap.remove(id) != null;
     }
 
     @Override
     public Meal get(int userId, int id) {
-        return repository.get(userId).get(id);
+        Map<Integer, Meal> subMap = repository.get(userId);
+        return subMap == null ? null : subMap.get(id);
     }
 
 
