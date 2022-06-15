@@ -54,13 +54,13 @@
     <form method="get" action="meals?action=filter">
         <dl>
             <dt>Start date and time:</dt>
-            <dd><input type="date" name="startDate" required></dd>
-            <dd><input type="time" name="startTime" required></dd>
+            <dd><input type="date" name="startDate" value="<%= request.getParameter("startDate") %>" required></dd>
+            <dd><input type="time" name="startTime" value="<%= request.getParameter("startTime") %>" required></dd>
         </dl>
         <dl>
             <dt>End date and time:</dt>
-            <dd><input type="date" name="endDate" required></dd>
-            <dd><input type="time" name="endTime" required></dd>
+            <dd><input type="date" name="endDate" value="<%= request.getParameter("endDate") %>" required></dd>
+            <dd><input type="time" name="endTime" value="<%= request.getParameter("endTime") %>" required></dd>
         </dl>
         <button type="submit">Filter</button>
         <button onclick="window.history.back()" type="button">Cancel</button>
