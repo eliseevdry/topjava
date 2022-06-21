@@ -17,15 +17,12 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml"})
 @RunWith(SpringRunner.class)
-@Ignore
 public class InMemoryAdminRestControllerSpringTest {
 
     @Autowired
     private AdminRestController controller;
 
-    @Autowired
-    @Qualifier("inMemoryUserRepository")
-    private InMemoryUserRepository repository;
+    private final InMemoryUserRepository repository = new InMemoryUserRepository();
 
     @Before
     public void setUp() {
