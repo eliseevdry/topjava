@@ -25,7 +25,7 @@ public class InMemoryAdminRestControllerTest {
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
         log.info("\n{}\n", Arrays.toString(appCtx.getBeanDefinitionNames()));
         controller = appCtx.getBean(AdminRestController.class);
-        repository = new InMemoryUserRepository();
+        repository = appCtx.getBean(InMemoryUserRepository.class);
     }
 
     @AfterClass

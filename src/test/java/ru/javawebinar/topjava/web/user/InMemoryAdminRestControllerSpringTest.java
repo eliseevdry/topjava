@@ -21,8 +21,8 @@ public class InMemoryAdminRestControllerSpringTest {
 
     @Autowired
     private AdminRestController controller;
-
-    private final InMemoryUserRepository repository = new InMemoryUserRepository();
+    @Autowired
+    private InMemoryUserRepository repository;
 
     @Before
     public void setUp() {
