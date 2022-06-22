@@ -21,7 +21,7 @@ public class MealTestData {
     public static final Meal meal6 = new Meal(MEAL_ID + 5, LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500);
     public static final Meal meal7 = new Meal(MEAL_ID + 6, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410);
 
-    public static final List<Meal> meals = Arrays.asList(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
+    public static final List<Meal> userMeals = Arrays.asList(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
     public static Meal getNew() {
         return new Meal(LocalDateTime.of(2022, Month.JUNE, 21, 22, 20), "Куриная грудка с гречкой", 400);
