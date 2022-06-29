@@ -8,13 +8,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class TestStopwatch extends Stopwatch {
-    private static final Map<String, Long> logInfoMap = new HashMap<>();
+    private static final StringBuilder logInfoBuilder = new StringBuilder();
 
-    public static Map<String, Long> getLogInfoMap() {
-        return logInfoMap;
+    public static String getLogInfo() {
+        return logInfoBuilder.toString();
     }
 
     protected void finished(long nanos, Description description) {
-        logInfoMap.put(description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+        logInfoBuilder.append("\n")
+                .append(description.getMethodName())
+                .append(" finished, time taken ")
+                .append(TimeUnit.NANOSECONDS.toMillis(nanos))
+                .append(" millisecond");
     }
 }

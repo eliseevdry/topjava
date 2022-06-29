@@ -40,10 +40,7 @@ public class MealServiceTest {
 
     @AfterClass
     public static void afterTest() {
-        Map<String, Long> logInfoMap = TestStopwatch.getLogInfoMap();
-        for (String key : logInfoMap.keySet()) {
-            log.info("{} finished, time taken {} millisecond", key, logInfoMap.get(key));
-        }
+        log.info(TestStopwatch.getLogInfo());
     }
 
 
