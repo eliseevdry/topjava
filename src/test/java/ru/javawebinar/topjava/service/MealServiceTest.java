@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.LocalStopwatch;
+import ru.javawebinar.topjava.TestStopwatch;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -30,10 +30,11 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    @Rule
-    public final Stopwatch localStopwatch = new LocalStopwatch();
     @ClassRule
-    public static final Stopwatch stopwatch = new LocalStopwatch();
+    public static final Stopwatch stopwatch = new TestStopwatch();
+
+    @Rule
+    public final Stopwatch localStopwatch = new TestStopwatch();
 
     @Autowired
     private MealService service;
