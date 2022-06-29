@@ -13,10 +13,10 @@ public class TestStopwatch extends Stopwatch {
     }
 
     protected void finished(long nanos, Description description) {
-        logInfoBuilder.append("\n")
+        logInfoBuilder.append("\n[")
                 .append(description.getMethodName())
-                .append(" finished, time taken ")
+                .append("]\tfinished, time taken [")
                 .append(TimeUnit.NANOSECONDS.toMillis(nanos))
-                .append(" millisecond");
+                .append("]\tmillisecond");
     }
 }
