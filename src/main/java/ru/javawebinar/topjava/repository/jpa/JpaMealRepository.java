@@ -1,12 +1,10 @@
 package ru.javawebinar.topjava.repository.jpa;
 
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,18 +20,15 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
+        User userRef = em.getReference(User.class, userId);
+        meal.setUser(userRef);
         if (meal.isNew()) {
-            User userRef = em.getReference(User.class, userId);
-            meal.setUser(userRef);
             em.persist(meal);
-        } else if (em.createNamedQuery(Meal.UPDATE)
-                .setParameter("id", meal.getId())
-                .setParameter("description", meal.getDescription())
-                .setParameter("calories", meal.getCalories())
-                .setParameter("date_time", meal.getDateTime())
-                .setParameter("user_id", userId)
-                .executeUpdate() == 0) {
-            throw new NotFoundException("Not found with id " + meal.getId() + " and userId " + userId);
+        } else {
+            if (get(meal.getId(), userId) == null) {
+                return null;
+            }
+            return em.merge(meal);
         }
         return meal;
     }
@@ -51,13 +46,8 @@ public class JpaMealRepository implements MealRepository {
     public Meal get(int id, int userId) {
         Meal meal = em.find(Meal.class, id);
         if (meal == null || meal.getUser().getId() != userId) {
-            throw new NotFoundException("Not found with id " + id + " and userId " + userId);
+            return null;
         }
-//        List<Meal> meals = em.createNamedQuery(Meal.BY_ID, Meal.class)
-//                .setParameter(1, id)
-//                .setParameter(2, userId)
-//                .getResultList();
-//        return DataAccessUtils.singleResult(meals);
         return meal;
     }
 

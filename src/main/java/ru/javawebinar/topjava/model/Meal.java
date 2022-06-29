@@ -21,7 +21,7 @@ import java.time.LocalTime;
                 "AND m.dateTime>=:startDateTime AND m.dateTime<:endDateTime ORDER BY m.dateTime DESC"),
 })
 @Entity
-@Table(name = "meals")
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"})})
 public class Meal extends AbstractBaseEntity {
 
     public static final String DELETE = "Meal.delete";
@@ -31,7 +31,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String BETWEEN_HALF_OPEN = "Meal.getBetweenHalfOpen";
 
     @NotNull
-    @Column(name = "date_time", nullable = false, unique = true)
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
     @NotBlank
