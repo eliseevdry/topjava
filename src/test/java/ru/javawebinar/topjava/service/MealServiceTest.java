@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.ClassRule;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +19,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Map;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -30,11 +33,19 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    @ClassRule
-    public static final Stopwatch stopwatch = new TestStopwatch();
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Rule
     public final Stopwatch localStopwatch = new TestStopwatch();
+
+    @AfterClass
+    public static void afterTest() {
+        Map<String, Long> logInfoMap = TestStopwatch.getLogInfoMap();
+        for (String key : logInfoMap.keySet()) {
+            log.info("{} finished, time taken {} millisecond", key, logInfoMap.get(key));
+        }
+    }
+
 
     @Autowired
     private MealService service;
