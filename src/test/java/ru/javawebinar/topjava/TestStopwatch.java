@@ -3,8 +3,6 @@ package ru.javawebinar.topjava;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class TestStopwatch extends Stopwatch {
