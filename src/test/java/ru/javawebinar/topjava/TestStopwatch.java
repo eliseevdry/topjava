@@ -13,10 +13,9 @@ public class TestStopwatch extends Stopwatch {
     }
 
     protected void finished(long nanos, Description description) {
-        logInfoBuilder.append("\n[")
-                .append(description.getMethodName())
-                .append("]\tfinished, time taken [")
-                .append(TimeUnit.NANOSECONDS.toMillis(nanos))
-                .append("]\tmillisecond");
+        String format = String.format("%-40s%-5d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+        logInfoBuilder.append("\n")
+                .append(format)
+                .append("\tms");
     }
 }

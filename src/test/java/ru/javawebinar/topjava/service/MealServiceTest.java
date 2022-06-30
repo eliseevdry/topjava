@@ -35,7 +35,7 @@ public class MealServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Rule
-    public final Stopwatch localStopwatch = new TestStopwatch();
+    public final Stopwatch stopwatch = new TestStopwatch();
 
     @AfterClass
     public static void afterTest() {
