@@ -40,7 +40,6 @@ public abstract class AbstractServiceTest {
         }
     };
 
-
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
