@@ -19,8 +19,7 @@ public interface UserRepository {
 
     List<User> getAll();
 
-
-    default User getWithMeal(int id) {
-        return null;
+    default User getWithMeals(int id) {
+        throw new UnsupportedOperationException("This method has no implementation in this class.");
     }
 }
