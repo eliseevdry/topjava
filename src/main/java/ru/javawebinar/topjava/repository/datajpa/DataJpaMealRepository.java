@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.datajpa;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,11 @@ public class DataJpaMealRepository implements MealRepository {
     public DataJpaMealRepository(CrudMealRepository crudRepository, CrudUserRepository crudUserRepository) {
         this.crudMealRepository = crudRepository;
         this.crudUserRepository = crudUserRepository;
+    }
+
+    @Override
+    public Meal getWithUser(int id, int userId) {
+        return crudMealRepository.getWithUser(id, userId);
     }
 
     @Override
@@ -36,12 +42,14 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return crudMealRepository.findByIdAndUserId(id, userId);
+        User user = crudUserRepository.getReferenceById(userId);
+        return crudMealRepository.findByIdAndUser(id, user);
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return crudMealRepository.findByUserIdOrderByDateTimeDesc(userId);
+        User user = crudUserRepository.getReferenceById(userId);
+        return crudMealRepository.findByUserOrderByDateTimeDesc(user);
     }
 
     @Override
