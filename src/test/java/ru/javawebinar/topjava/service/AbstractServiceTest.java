@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
@@ -27,9 +29,10 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class AbstractServiceTest {
     @Autowired
-    Environment env;
+    private Environment env;
 
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
@@ -48,7 +51,7 @@ public abstract class AbstractServiceTest {
         });
     }
 
-    protected boolean isJDBC() {
+    protected boolean isJdbc() {
         return env.acceptsProfiles(Profiles.of(JDBC));
     }
 }

@@ -10,37 +10,37 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <br>
 <section>
-    <h3><spring:message code="meal.title"/></h3>
+    <h2><spring:message code="meal.title"/></h2>
     <hr/>
-    <h2>Meals</h2>
+    <h3><spring:message code="common.filter"/></h3>
     <form method="get" action="${pageContext.request.contextPath}/meals/filter">
         <dl>
-            <dt>From Date (inclusive):</dt>
+            <dt><spring:message code="meal.fromDate"/>:</dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
         </dl>
         <dl>
-            <dt>To Date (inclusive):</dt>
+            <dt><spring:message code="meal.toDate"/>:</dt>
             <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
         </dl>
         <dl>
-            <dt>From Time (inclusive):</dt>
+            <dt><spring:message code="meal.fromTime"/>:</dt>
             <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
         </dl>
         <dl>
-            <dt>To Time (exclusive):</dt>
+            <dt><spring:message code="meal.toTime"/>:</dt>
             <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
         </dl>
-        <button type="submit">Filter</button>
+        <button type="submit"><spring:message code="common.filter"/></button>
     </form>
     <hr/>
-    <a href="${pageContext.request.contextPath}/meals/new">Add Meal</a>
+    <a href="${pageContext.request.contextPath}/meals/new"><spring:message code="meal.addMeal"/></a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Calories</th>
+            <th><spring:message code="meal.dateTime"/></th>
+            <th><spring:message code="meal.description"/></th>
+            <th><spring:message code="meal.calories"/></th>
             <th></th>
             <th></th>
         </tr>
@@ -59,13 +59,13 @@
                 <td>
                     <form method="get" action="${pageContext.request.contextPath}/meals/edit">
                         <input type="hidden" name="id" value="${meal.id}">
-                        <input type="submit" value="Update"/>
+                        <input type="submit" value="<spring:message code="common.update"/>"/>
                     </form>
                 </td>
                 <td>
                     <form method="post" action="${pageContext.request.contextPath}/meals/delete">
                         <input type="hidden" name="id" value="${meal.id}">
-                        <input type="submit" value="Delete"/>
+                        <input type="submit" value="<spring:message code="common.delete"/>"/>
                     </form>
                 </td>
             </tr>

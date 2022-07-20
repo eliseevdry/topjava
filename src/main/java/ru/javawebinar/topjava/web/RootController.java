@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.javawebinar.topjava.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
 @Controller
-public class RootController{
+public class RootController {
+    protected static final Logger log = LoggerFactory.getLogger(RootController.class);
+
     @Autowired
     private UserService service;
-
-    protected static final Logger log = LoggerFactory.getLogger(RootController.class);
 
     @GetMapping("/")
     public String root() {
