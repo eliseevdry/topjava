@@ -1,13 +1,16 @@
 package ru.javawebinar.topjava.repository;
 
+import org.springframework.validation.annotation.Validated;
 import ru.javawebinar.topjava.model.Meal;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Validated
 public interface MealRepository {
     // null if updated meal does not belong to userId
-    Meal save(Meal meal, int userId);
+    Meal save(@Valid Meal meal, int userId);
 
     // false if meal does not belong to userId
     boolean delete(int id, int userId);

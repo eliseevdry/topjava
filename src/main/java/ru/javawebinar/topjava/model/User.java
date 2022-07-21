@@ -73,6 +73,7 @@ public class User extends AbstractNamedEntity {
     private List<Meal> meals;
 
     public User() {
+        roles = new HashSet<>();
     }
 
     public User(User u) {
@@ -155,5 +156,12 @@ public class User extends AbstractNamedEntity {
                 ", roles=" + roles +
                 ", caloriesPerDay=" + caloriesPerDay +
                 '}';
+    }
+
+    public void addRoles(Role role) {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.add(role);
     }
 }

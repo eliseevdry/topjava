@@ -8,7 +8,7 @@ import ru.javawebinar.topjava.service.MealService;
 
 @Component
 public abstract class AbstractMealController {
-    protected static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected MealService service;

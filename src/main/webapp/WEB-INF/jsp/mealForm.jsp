@@ -9,15 +9,10 @@
 <section>
     <hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <h2>
-        <c:if test="${meal.isNew()}">
-            <spring:message code="meal.create"/>
-        </c:if>
-        <c:if test="${!meal.isNew()}">
-            <spring:message code="meal.edit"/>
-        </c:if>
-    </h2>
-    <form method="post" action="${pageContext.request.contextPath}/meals">
+    <spring:message code="meal.create" var="create"/>
+    <spring:message code="meal.edit" var="edit"/>
+    <h2>${meal.isNew() ? create : edit}</h2>
+    <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.dateTime"/>:</dt>

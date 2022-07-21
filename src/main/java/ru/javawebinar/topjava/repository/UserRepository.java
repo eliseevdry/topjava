@@ -1,12 +1,15 @@
 package ru.javawebinar.topjava.repository;
 
+import org.springframework.validation.annotation.Validated;
 import ru.javawebinar.topjava.model.User;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 public interface UserRepository {
     // null if not found, when updated
-    User save(User user);
+    User save(@Valid User user);
 
     // false if not found
     boolean delete(int id);

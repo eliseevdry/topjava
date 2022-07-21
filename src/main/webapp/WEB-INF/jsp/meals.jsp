@@ -13,7 +13,7 @@
     <h2><spring:message code="meal.title"/></h2>
     <hr/>
     <h3><spring:message code="common.filter"/></h3>
-    <form method="get" action="${pageContext.request.contextPath}/meals/filter">
+    <form method="get" action="meals/filter">
         <dl>
             <dt><spring:message code="meal.fromDate"/>:</dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
@@ -33,7 +33,7 @@
         <button type="submit"><spring:message code="common.filter"/></button>
     </form>
     <hr/>
-    <a href="${pageContext.request.contextPath}/meals/new"><spring:message code="meal.addMeal"/></a>
+    <a href="meals/new"><spring:message code="meal.addMeal"/></a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
@@ -57,13 +57,13 @@
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
                 <td>
-                    <form method="get" action="${pageContext.request.contextPath}/meals/edit">
+                    <form method="get" action="meals/edit">
                         <input type="hidden" name="id" value="${meal.id}">
                         <input type="submit" value="<spring:message code="common.update"/>"/>
                     </form>
                 </td>
                 <td>
-                    <form method="post" action="${pageContext.request.contextPath}/meals/delete">
+                    <form method="post" action="meals/delete">
                         <input type="hidden" name="id" value="${meal.id}">
                         <input type="submit" value="<spring:message code="common.delete"/>"/>
                     </form>
