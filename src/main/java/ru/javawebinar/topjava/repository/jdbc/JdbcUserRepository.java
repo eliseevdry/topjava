@@ -1,8 +1,6 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,7 +12,6 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +20,25 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
 
-    private static final BeanPropertyRowMapper<User> USER_ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
+    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
     private static final RowMapper<Role> ROLE_ROW_MAPPER = (rs, rowNum) -> {
         String roleName = rs.getString("role");
         return roleName == null ? null : Role.valueOf(roleName);
+    };
+    public static final ResultSetExtractor<User> RESULT_SET_EXTRACTOR_WITH_ROLES = rs -> {
+        User user = null;
+        int row = 0;
+        while (rs.next()) {
+            if (user == null) {
+                user = ROW_MAPPER.mapRow(rs, row);
+            }
+            Role role = ROLE_ROW_MAPPER.mapRow(rs, row);
+            if (role != null && user != null) {
+                user.addRoles(role);
+            }
+            row++;
+        }
+        return user;
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -49,11 +61,12 @@ public class JdbcUserRepository implements UserRepository {
     @Transactional
     public User save(User user) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+        Integer id = user.getId();
 
         if (user.isNew()) {
-            int newKey = insertUser.executeAndReturnKey(parameterSource).intValue();
-            user.setId(newKey);
-            saveRoles(new ArrayList<>(user.getRoles()), newKey);
+            id = insertUser.executeAndReturnKey(parameterSource).intValue();
+            user.setId(id);
+            saveRoles(new ArrayList<>(user.getRoles()), id);
             return user;
         } else if (namedParameterJdbcTemplate.update("""
                    UPDATE users SET name=:name, email=:email, password=:password, 
@@ -61,13 +74,16 @@ public class JdbcUserRepository implements UserRepository {
                 """, parameterSource) == 0) {
             return null;
         }
-        deleteRoles(user.getId());
-        saveRoles(new ArrayList<>(user.getRoles()), user.getId());
+        deleteRoles(id);
+        saveRoles(new ArrayList<>(user.getRoles()), id);
 
         return user;
     }
 
     private void saveRoles(List<Role> roleList, Integer id) {
+        if (roleList.isEmpty()) {
+            return;
+        }
         jdbcTemplate.batchUpdate("INSERT INTO user_roles VALUES (?, ?)", new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -94,54 +110,34 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users u WHERE id=?", USER_ROW_MAPPER, id);
-        User user = DataAccessUtils.singleResult(users);
-        if (user != null) {
-            getRoles(user, id);
-        }
-        return user;
+        return jdbcTemplate.query("SELECT * FROM users u LEFT JOIN user_roles ur ON u.id = ur.user_id WHERE id=?", RESULT_SET_EXTRACTOR_WITH_ROLES, id);
     }
 
     @Override
     public User getByEmail(String email) {
-//        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", USER_ROW_MAPPER, email);
-        User user = DataAccessUtils.singleResult(users);
-        if (user != null) {
-            Integer id = user.getId();
-            getRoles(user, id);
-        }
-        return user;
-    }
-
-    private void getRoles(User user, Integer id) {
-        List<Role> roles = jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", Role.class, id);
-        user.setRoles(roles);
+        return jdbcTemplate.query("SELECT * FROM users u LEFT JOIN user_roles ur ON u.id = ur.user_id WHERE email=?", RESULT_SET_EXTRACTOR_WITH_ROLES, email);
     }
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users u LEFT JOIN user_roles ur on u.id = ur.user_id order by u.name, u.email", new ResultSetExtractor<List<User>>() {
-            @Override
-            public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                List<User> users = new ArrayList<>();
-                Long userId = null;
-                User currentUser = null;
-                int userIdx = 0, roleIdx = 0;
-                while (rs.next()) {
-                    if (currentUser == null || !userId.equals(rs.getLong("id"))) {
-                        userId = rs.getLong("id");
-                        currentUser = USER_ROW_MAPPER.mapRow(rs, userIdx++);
-                        roleIdx = 0;
-                        users.add(currentUser);
-                    }
-                    Role role = ROLE_ROW_MAPPER.mapRow(rs, roleIdx++);
-                    if (role != null && currentUser != null) {
-                        currentUser.addRoles(role);
-                    }
+        return jdbcTemplate.query("SELECT * FROM users u LEFT JOIN user_roles ur ON u.id = ur.user_id ORDER BY u.name, u.email", rs -> {
+            List<User> users = new ArrayList<>();
+            Long userId = null;
+            User currentUser = null;
+            int userIdx = 0, roleIdx = 0;
+            while (rs.next()) {
+                if (currentUser == null || !userId.equals(rs.getLong("id"))) {
+                    userId = rs.getLong("id");
+                    currentUser = ROW_MAPPER.mapRow(rs, userIdx++);
+                    roleIdx = 0;
+                    users.add(currentUser);
                 }
-                return users;
+                Role role = ROLE_ROW_MAPPER.mapRow(rs, roleIdx++);
+                if (role != null && currentUser != null) {
+                    currentUser.addRoles(role);
+                }
             }
+            return users;
         });
     }
 }

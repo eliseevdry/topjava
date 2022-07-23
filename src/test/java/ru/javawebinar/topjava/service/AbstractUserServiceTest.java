@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,19 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(service.get(newId), newUser);
+    }
+
+    @Test
+    public void createWithoutRoles() {
+        User newGuest = new User(guest);
+        newGuest.setId(null);
+        newGuest.setEmail("testGuest@mail.ru");
+
+        User created = service.create(newGuest);
+        int newId = created.id();
+        newGuest.setId(newId);
+        USER_MATCHER.assertMatch(created, newGuest);
+        USER_MATCHER.assertMatch(service.get(newId), newGuest);
     }
 
     @Test
@@ -84,6 +96,15 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void updateWithoutRoles() {
+        User updated = new User(getUpdated());
+        //updated.setRoles(null);
+        updated.getRoles().clear();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(USER_ID), updated);
+    }
+
+    @Test
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
@@ -91,7 +112,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-        //Assume.assumeFalse(isJdbc());
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)));
