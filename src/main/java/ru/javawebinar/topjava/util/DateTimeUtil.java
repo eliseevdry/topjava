@@ -12,6 +12,10 @@ import java.time.temporal.ChronoUnit;
 public class DateTimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     // DB doesn't support LocalDate.MIN/MAX
     private static final LocalDateTime MIN_DATE = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MAX_DATE = LocalDateTime.of(3000, 1, 1, 0, 0);
@@ -36,8 +40,16 @@ public class DateTimeUtil {
         return StringUtils.hasLength(str) ? LocalDate.parse(str) : null;
     }
 
+    public static String printLocalDate(LocalDate date) {
+        return date == null ? "" : date.format(DATE_FORMATTER);
+    }
+
     public static @Nullable
     LocalTime parseLocalTime(@Nullable String str) {
         return StringUtils.hasLength(str) ? LocalTime.parse(str) : null;
+    }
+
+    public static String printLocalTime(LocalTime time) {
+        return time == null ? "" : time.format(TIME_FORMATTER);
     }
 }
