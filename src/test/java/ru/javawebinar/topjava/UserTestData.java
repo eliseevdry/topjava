@@ -9,7 +9,7 @@ import java.util.Date;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {
-    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals");
+    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals.user.registered");
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
@@ -33,5 +33,18 @@ public class UserTestData {
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
+    }
+
+    public static User getUserWithMeals() {
+        User userWithMeals = new User(user);
+        userWithMeals
+                .addMeal(MealTestData.meal7)
+                .addMeal(MealTestData.meal6)
+                .addMeal(MealTestData.meal5)
+                .addMeal(MealTestData.meal4)
+                .addMeal(MealTestData.meal3)
+                .addMeal(MealTestData.meal2)
+                .addMeal(MealTestData.meal1);
+        return userWithMeals;
     }
 }
