@@ -5,15 +5,15 @@ ___
 
 ### GET REQUEST :
 
-* TO ADMIN UI:
+* USERS FROM ADMIN :
   `curl http://localhost:8080/topjava/rest/admin/users`
-* TO ADMIN UI BY ID:
+* USER FROM ADMIN BY ID :
   `curl http://localhost:8080/topjava/rest/admin/users/100002`
-* TO ADMIN UI BY EMAIL:
+* USER FROM ADMIN BY EMAIL :
   `curl http://localhost:8080/topjava/rest/admin/users/by-email?email=user@gmail.com`
-* TO CURRENT PROFILE:
+* TO CURRENT PROFILE :
   `curl http://localhost:8080/topjava/rest/profile`
-* TO RUSSIAN TEXT EXAMPLE:
+* TO RUSSIAN TEXT EXAMPLE :
   `curl http://localhost:8080/topjava/rest/profile/text`
 * TO MEALS :
   `curl http://localhost:8080/topjava/rest/meals`
@@ -36,7 +36,7 @@ ___
 
 ### PUT REQUEST :
 
-* UPDATE USER FROM ADMIN UI :
+* UPDATE USER FROM ADMIN :
   `curl -i -X PUT -H "Content-Type:application/json" http://localhost:8080/topjava/rest/admin/users/100002 -d "{\"name\": \"UpdateGuest\",\"email\": \"guest@gmail.com\",\"password\": \"guest\",\"caloriesPerDay\":1800}"`
 * UPDATE MEAL :
   `curl -i -X PUT -H "Content-Type:application/json" http://localhost:8080/topjava/rest/meals/100007 -d "{\"dateTime\": \"2020-01-30T18:10\",\"description\": \"UpdateMeal\",\"calories\": 250}"`
@@ -45,7 +45,7 @@ ___
 
 ### DELETE REQUEST :
 
-* DELETE USER FROM ADMIN UI :
+* DELETE USER FROM ADMIN :
   `curl -i -X DELETE http://localhost:8080/topjava/rest/admin/users/100019`
 
 * DELETE MEAL :

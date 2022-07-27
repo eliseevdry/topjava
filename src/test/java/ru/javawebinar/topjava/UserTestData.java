@@ -5,11 +5,13 @@ import ru.javawebinar.topjava.model.User;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {
-    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals.user.registered");
+    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals");
+    public static final MatcherFactory.Matcher<User> USER_WITH_MEALS_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals.user");
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
@@ -37,14 +39,7 @@ public class UserTestData {
 
     public static User getUserWithMeals() {
         User userWithMeals = new User(user);
-        userWithMeals
-                .addMeal(MealTestData.meal7)
-                .addMeal(MealTestData.meal6)
-                .addMeal(MealTestData.meal5)
-                .addMeal(MealTestData.meal4)
-                .addMeal(MealTestData.meal3)
-                .addMeal(MealTestData.meal2)
-                .addMeal(MealTestData.meal1);
+        userWithMeals.setMeals(MealTestData.meals);
         return userWithMeals;
     }
 }
