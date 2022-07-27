@@ -16,6 +16,10 @@ public class AdminRestController extends AbstractUserController {
 
     static final String REST_URL = "/rest/admin/users";
 
+    public static String getRestUrl() {
+        return REST_URL;
+    }
+
     @Override
     @GetMapping
     public List<User> getAll() {
